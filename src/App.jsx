@@ -1,6 +1,6 @@
-import ProfileImg from './assets/images/profil.jpg';
-import CodeTalenta from './assets/images/codetalenta.png';
-import HybridImg from './assets/images/hybrid.png';
+import ProfileImg from './assets/images/profil.webp';
+import CodeTalenta from './assets/images/codetalenta.webp';
+import HybridImg from './assets/images/hybrid.webp';
 import Button from "./components/Button.jsx";
 import {BiLogoCss3, BiLogoHtml5, BiLogoJavascript, BiLogoReact} from "react-icons/bi";
 import {DiCodeigniter, DiMysql} from "react-icons/di";
