@@ -11,7 +11,7 @@ const Typewritter = ({text, delay, infinite}) => {
             setTimeout(() => {
                 setCurrentIndex(0);
                 setCurrentText('');
-            }, 1000)
+            }, 2000)
         } else {
             if (currentIndex <= text.length) {
                 timeout = setTimeout(() => {
@@ -27,7 +27,12 @@ const Typewritter = ({text, delay, infinite}) => {
         return () => clearTimeout(timeout);
     }, [currentIndex, delay, infinite, text]);
 
-    return <span>{currentText}</span>
+    return <span>
+        {(currentText.length === 0)
+            ? text
+            : currentText
+        }
+    </span>
 }
 
 export default Typewritter;

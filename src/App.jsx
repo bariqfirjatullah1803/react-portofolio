@@ -9,6 +9,9 @@ import {AiFillGithub, AiFillLinkedin, AiOutlineMail} from "react-icons/ai";
 import Typewritter from "./components/Typewritter.jsx";
 import {useEffect, useRef, useState} from "react";
 import rgbaToHex from "./utils/RgbaToHex.jsx";
+import Head from "./partials/Head.jsx";
+import {IoMdClose, IoMdMenu} from "react-icons/io";
+import {FaArrowRightLong} from "react-icons/fa6";
 
 function App() {
 
@@ -26,9 +29,10 @@ function App() {
         "url": "https://portofolio.codetalenta.com/"
     },];
 
-    const [navbarClass, setNavbarClass] = useState('ease-in duration-300 py-10');
-
+    const [navbarClass, setNavbarClass] = useState('ease-in duration-300 py-6 lg:py-10');
     const [activeSection, setActiveSection] = useState('bg-[#EEEEEE] text-[#303841]')
+    const [activeNavMobile, setActiveNavMobile] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
 
     const aboutRef = useRef(null);
     const contactRef = useRef(null);
@@ -53,7 +57,7 @@ function App() {
                 )
                 ;
                 if (verticalScrollPx < 100) {
-                    setNavbarClass('py-2 ease-in duration-300 ');
+                    setNavbarClass('py-4 lg:py-2 ease-in duration-300 ');
                 }
                 if (verticalScrollPx === 0) {
                     setNavbarClass('py-6 ease-out duration-300 ');
@@ -67,8 +71,9 @@ function App() {
         }
         , []);
 
-    const scrollSection = (event, ref) => {
+    const scrollSection = (event, ref, mobile = false) => {
         event.preventDefault();
+        if (mobile) setActiveNavMobile(!activeNavMobile)
         if (ref.current) {
             window.scrollTo({
                 top: ref.current.offsetTop - 100,
@@ -77,10 +82,34 @@ function App() {
         }
     }
 
+    const handleNavMobile = () => {
+        setActiveNavMobile(!activeNavMobile)
+    }
+
+    useEffect(() => {
+        setIsOpen(true)
+    }, []);
+
     return (<>
+        {/* Body Nav Mobile */}
+        <div
+            className={`bg-[#303841] z-10 fixed top-0 w-screen h-screen opacity-0 transition-opacity ease-in-out duration-500 ${!isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+            {'\u00A0'}
+        </div>
+
         <nav
-            className={`sticky top-0 shadow-lg ${activeSection}  ${navbarClass}`}>
-            <div className={'container flex flex-row items-center justify-between tracking-tighter'}>
+            className={`${activeNavMobile ? 'translate-y-0' : 'translate-y-[-120%]'} transition-transform ease-in-out duration-500 z-2 w-full h-full fixed ${activeSection}`}>
+            <ul className={'h-full flex flex-col justify-center items-center text-xl text-center font-bold gap-5'}>
+                <li onClick={(event) => scrollSection(event, aboutRef, true)}>About me</li>
+                <li onClick={(event) => scrollSection(event, recentWorksRef, true)}>Recent works</li>
+                <li onClick={(event) => scrollSection(event, contactRef, true)}>Contact</li>
+            </ul>
+        </nav>
+
+        {/* Header Nav */}
+        <nav
+            className={`sticky top-0 lg:shadow-lg ${activeSection} ${navbarClass}`}>
+            <div className={'container hidden lg:flex flex-row items-center justify-between tracking-tighter'}>
                 <h1 className={'text-2xl w-full'}>Bariq Firjatullah</h1>
                 <ul className={'w-full flex flex-row gap-5 justify-end text-2xl '}>
                     <li className={'hover:text-[#F6C90E]'}>
@@ -94,15 +123,31 @@ function App() {
                     </li>
                 </ul>
             </div>
+            <div className={'flex flex-row justify-between lg:hidden container'}>
+                <h1 className={'text-xl font-bold'}>Bariq Firjatullah</h1>
+                <button
+                    className={`text-2xl font-bold transition-transform ease-in-out duration-500 transform ${activeNavMobile ? 'rotate-0' : 'rotate-180'}`}
+                    onClick={handleNavMobile}>
+                    {activeNavMobile
+                        ?
+                        <IoMdClose/>
+                        :
+                        <IoMdMenu/>
+                    }
+                </button>
+            </div>
         </nav>
+
         <section ref={aboutRef} id={'about'}
-                 className={'container bg-[#EEEEEE] flex flex-col lg:flex-row-reverse py-5 mb-3 gap-3 lg:gap-14 lg:items-center'}>
+                 className={'container bg-[#EEEEEE] flex flex-col md:flex-row-reverse py-5 mb-3 gap-3 md:gap-10 lg:gap-14 lg:items-center'}>
             <img src={ProfileImg} alt={'Profile Image'}
-                 className={'rounded-xl h-72 object-cover lg:w-3/5 lg:h-[32rem]'}/>
-            <div className={'flex flex-col gap-3'}>
-                <h1 className={'text-5xl font-bold leading-1 text-[#303841] text-justify'}>Hello,<br
-                    className={'lg:hidden'}/> I'm <Typewritter text={'Bariq Firjatullah'} delay={100} infinite/></h1>
-                <p className={'text-3xl font-light leading-1 text-[#3A4750] text-justify'}>I am a web developer with a
+                 className={'rounded-xl h-72 object-cover lg:w-3/5 md:h-[20rem] lg:h-[32rem]'}/>
+            <div className={'flex flex-col gap-1 lg:gap-3'}>
+                <h1 className={'text-3xl lg:text-5xl font-bold leading-1 text-[#303841] text-justify'}>Hello, I'm <br
+                    className={'lg:hidden'}/><Typewritter text={'Bariq Firjatullah'} delay={100} infinite/>
+                </h1>
+                <p className={'text-lg lg:text-3xl font-light leading-1 text-[#3A4750] text-justify'}>I am a web
+                    developer with a
                     keen interest in app development. I am excited to utilize my skills and experience to develop
                     innovative applications.</p>
                 <div className={'flex flex-col gap-5'}>
@@ -110,7 +155,7 @@ function App() {
                         <Button variant={'primary'}>My Works</Button>
                         <Button variant={'outline'}>More About Me</Button>
                     </div>
-                    <div className={'flex flex-row flex-wrap gap-3 justify-center lg:justify-start'}>
+                    <div className={'flex flex-row flex-wrap gap-3 justify-around lg:justify-start'}>
                         <div className={'flex flex-row items-center gap-2'}>
                             <BiLogoHtml5 className={'text-4xl text-[#303841]'}/>
                             <span className={'font-semibold text-[#303841] text-md lg:text-xl'}>HTML</span>
@@ -136,7 +181,7 @@ function App() {
                             <span className={'font-semibold text-[#303841] text-md lg:text-xl'}>Laravel</span>
                         </div>
                         <div className={'flex flex-row items-center gap-2'}>
-                            <DiCodeigniter className={'text-4xl text-[#303841]'}/>
+                            <DiCodeigniter className={'text-3xl text-[#303841]'}/>
                             <span className={'font-semibold text-[#303841] text-md lg:text-xl'}>Codeigniter</span>
                         </div>
                         <div className={'flex flex-row items-center gap-2'}>
@@ -149,14 +194,14 @@ function App() {
         </section>
         <section ref={recentWorksRef} id={'recent-works'}
                  className={'container bg-[#F6C90E] flex flex-col gap-4 py-5 mb-3 rounded-xl'}>
-            <h1 className={'text-5xl lg:text-6xl font-bold leading-1 text-[#303841] text-justify '}>Recent
+            <h1 className={'text-4xl lg:text-6xl font-extrabold lg:font-bold leading-1 text-[#303841] text-justify'}>Recent
                 works</h1>
             <div className={'flex flex-col gap-5 lg:gap-10'}>
                 {recentWorks.map((item => {
-                    const isReverse = (item.id % 2 === 0) ? 'flex-row-reverse' : 'flex-row';
+                    const isReverse = (item.id % 2 === 0) ? 'lg:flex-row-reverse' : 'lg:flex-row';
                     return (
                         <div key={item.id}
-                             className={`w-full flex flex-col lg:${isReverse} lg:items-top gap-2 lg:gap-10`}>
+                             className={`w-full flex flex-col ${isReverse} lg:items-top gap-2 lg:gap-10`}>
                             <img src={item.image} alt={item.title}
                                  className={'rounded-xl w-full lg:w-1/2 object-cover object-top shadow-xl'}/>
                             <div className={'flex flex-col gap-4'}>
@@ -171,13 +216,17 @@ function App() {
                         </div>
                     );
                 }))}
+                <div className={'text-center font-bold flex flex-row justify-center items-center gap-3'}>
+                    <p>View more</p>
+                    <FaArrowRightLong/></div>
             </div>
         </section>
         <section ref={contactRef} id={'contact'}
                  className={'container bg-[#EEEEEE] flex flex-col lg:flex-row gap-3 lg:gap-10 mb-3 py-4 '}>
             <div className={'flex flex-col gap-2 lg:w-1/2'}>
-                <h1 className={'font-bold text-4xl text-[#303841]'}>Contact</h1>
-                <p className={'font-normal leading-tight text-xl text-justify text-[#3A4750]'}>Thank you for visiting my
+                <h1 className={'font-extrabold lg:font-bold text-3xl lg:text-4xl text-[#303841]'}>Contact</h1>
+                <p className={'font-normal leading-tight text-lg lg:text-xl text-justify text-[#3A4750]'}>Thank you for
+                    visiting my
                     site. If
                     you have any further questions, please feel free to contact
                     me, I will reply as soon as possible</p>

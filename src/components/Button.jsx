@@ -14,7 +14,8 @@ const Button = ({children, variant, className}) => {
     }
 
     return (
-        <button className={`rounded-2xl px-4 py-2 font-semibold text-xl ${customClass} ${className}`}>{children}</button>
+        <button
+            className={`rounded-lg lg:rounded-2xl px-3 lg:px-4 py-1 lg:py-2 text-lg lg:text-xl font-semibold ${customClass} ${className}`}>{children}</button>
     );
 }
 
