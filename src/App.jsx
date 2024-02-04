@@ -9,7 +9,6 @@ import {AiFillGithub, AiFillLinkedin, AiOutlineMail} from "react-icons/ai";
 import Typewritter from "./components/Typewritter.jsx";
 import {useEffect, useRef, useState} from "react";
 import rgbaToHex from "./utils/RgbaToHex.jsx";
-import Head from "./partials/Head.jsx";
 import {IoMdClose, IoMdMenu} from "react-icons/io";
 import {FaArrowRightLong} from "react-icons/fa6";
 
